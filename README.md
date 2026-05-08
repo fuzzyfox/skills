@@ -19,13 +19,15 @@ This repository is designed to work with the `skills` CLI so the catalog can be 
 
 Use these skills when you want to package the current session for another agent or continue the work in a fresh session.
 
-- **handoff** - Compact the current conversation into a handoff document for another agent to pick up.
+- **[handoff](./skills/handoff/SKILL.md)** - Compact the current conversation into a handoff document for another agent to pick up.
+
+  Source: adapted from Matt Pocock.
 
   ```bash
   npx skills add fuzzyfox/skills --skill handoff
   ```
 
-- **spawn** - Create a handoff and open a new agent session in a fresh `tmux` window so work can continue in parallel or with a clean context.
+- **[spawn](./skills/spawn/SKILL.md)** - Create a handoff and open a new agent session in a fresh `tmux` window so work can continue in parallel or with a clean context.
 
   ```bash
   npx skills add fuzzyfox/skills --skill spawn
@@ -35,7 +37,7 @@ Use these skills when you want to package the current session for another agent 
 
 Use this skill when implementation is done and you want to produce a clean commit message that matches the repo's intent and changelog semantics.
 
-- **git-commit** - Create git commits with a Gitmoji-prefixed Conventional Commit subject and changelog-aware messaging.
+- **[git-commit](./skills/git-commit/SKILL.md)** - Create git commits with a Gitmoji-prefixed Conventional Commit subject and changelog-aware messaging.
 
   ```bash
   npx skills add fuzzyfox/skills --skill git-commit
@@ -54,6 +56,8 @@ List available skills without installing:
 ```bash
 npx skills add fuzzyfox/skills --list
 ```
+
+Use `--copy` if you want copied files instead of symlinks.
 
 
 ## Licensing

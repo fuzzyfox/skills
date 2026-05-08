@@ -9,6 +9,8 @@ This repository is the canonical source for installable skills.
 - Do not copy third-party skills into this repo.
 - When adding or changing a visible skill, update `README.md`.
 - Treat the top-level `LICENSE` as applying to authored content only.
+- Each skill entry in the top-level `README.md` must link the skill name to its `SKILL.md`.
+	- If a skill isn't authored by the repo owner, the skill must also carry some attribution to its source.
 
 ## Validation
 
