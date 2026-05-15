@@ -77,3 +77,4 @@ The helper script handles the first four automatically. Pass `--download` for lo
 
 - [Best practices](references/BEST_PRACTICES.md) — accessibility, colour, sizing, caching, expiration gotchas.
 - [scripts/build-chart.js](scripts/build-chart.js) — the only utility you should need.
+- [QuickChart official documentation](https://quickchart.io/documentation/) — upstream reference for chart types, parameters, and API endpoints if troubleshooting is required.
