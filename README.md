@@ -43,6 +43,16 @@ Use this skill when implementation is done and you want to produce a clean commi
   npx skills add fuzzyfox/skills --skill git-commit
   ```
 
+### Authoring and Output
+
+Use this skill when producing markdown reports, changelogs, or dashboards that need embedded charts.
+
+- **[quickchart](./skills/quickchart/SKILL.md)** - Generate chart images for markdown documents using the QuickChart API, with per-type recipes and a transport-aware build script.
+
+  ```bash
+  npx skills add fuzzyfox/skills --skill quickchart
+  ```
+
 ## Install All Skills
 
 Install everything from this repository:
