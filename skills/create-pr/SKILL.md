@@ -44,6 +44,7 @@ Write for reviewers:
 - Explain what changed and why in a few complete sentences.
 - Call out non-obvious implementation choices, migrations, config changes, compatibility risks, rollout concerns, and gotchas.
 - Link or mention related issues/PRs.
+  - When mentioning Linear issues, ensure they're links to the actual issues, not just the issue IDs
 - Include screenshots, recordings, or command output only when they materially help review the change. (Ask the user to provide these when/where relevant)
 - Avoid flooding the body with details that are easy to infer from the diff.
 - Do not invent testing, risk, or product context.
