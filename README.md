@@ -61,6 +61,18 @@ Use this skill when producing markdown reports, changelogs, or dashboards that n
   npx skills add fuzzyfox/skills --skill quickchart
   ```
 
+### Communication Modes
+
+Use this skill when you want responses stripped to the bone and an alarm raised on bloated prompts.
+
+- **[desert-mode](./skills/desert-mode/SKILL.md)** - Ruthless token-minimization mode with a "token police" prompt-length check and an oasis exception for safety-critical replies.
+
+  Source: adapted from Rob Conery, ["The Token Police"](https://bigmachine.io/articles/ai/the-token-police); escape route inspired by Matt Pocock's `caveman`.
+
+  ```bash
+  npx skills add fuzzyfox/skills --skill desert-mode
+  ```
+
 ## Install All Skills
 
 Install everything from this repository:
