@@ -51,6 +51,18 @@ Use this skill when implementation is ready to publish and you want a GitHub PR 
   npx skills add fuzzyfox/skills --skill create-pr
   ```
 
+### Code Review
+
+Use this skill when you want a branch or PR reviewed along separate standards, spec, and architecture axes rather than one blurred pass.
+
+- **[review](./skills/review/SKILL.md)** - Review changes since a fixed point along three independent axes (Standards, Spec, Architecture) using three parallel sub-agents, with an ambitious beyond-the-diff architecture pass and an explicit approval bar.
+
+  Source: adapted from Matt Pocock's in-progress [`review`](https://github.com/mattpocock/skills/blob/main/skills/in-progress/review/SKILL.md) (dual-axis standards/spec design); the Architecture axis folds in ambition, "code judo", the file-size ceiling, and the approval bar from the Cursor team's [`thermo-nuclear-code-quality-review`](https://github.com/cursor/plugins/blob/main/cursor-team-kit/skills/thermo-nuclear-code-quality-review/SKILL.md).
+
+  ```bash
+  npx skills add fuzzyfox/skills --skill review
+  ```
+
 ### Authoring and Output
 
 Use this skill when producing markdown reports, changelogs, or dashboards that need embedded charts.
