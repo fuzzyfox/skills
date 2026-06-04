@@ -16,14 +16,15 @@ metadata:
     - Cursor team, thermo-nuclear-code-quality-review
 ---
 
-# review
+# Review
 
 Three-axis review of the diff between a fixed point and `HEAD`, run as three
 parallel `general-purpose` sub-agents that never share context, then
 aggregated under separate headings. The separation is the point: a change can
 pass one axis and fail another, and a single reviewer collapses them.
 
-## 1. Pin the fixed point
+## Process
+### 1. Pin the fixed point
 
 Pass through whatever the user said (SHA, branch, tag, `main`, `HEAD~5`).
 Capture once:
@@ -33,7 +34,7 @@ Capture once:
 
 Do not proceed without a fixed point.
 
-## 2. Locate the inputs (do this once, hand to the sub-agents)
+### 2. Locate the inputs (do this once, hand to the sub-agents)
 
 - **Spec source**, in order: issue refs in commit messages (`#123`,
   `Closes #45`) → a path the user passed → a PRD/spec under `docs/`,
@@ -45,7 +46,7 @@ Do not proceed without a fixed point.
   (`.editorconfig`, `eslint`, `tsconfig`, `biome`, `prettier`) but tell the
   agent NOT to re-check what tooling already enforces.
 
-## 3. Spawn three sub-agents in parallel (one message, three Agent calls)
+### 3. Spawn three sub-agents in parallel (one message, three Agent calls)
 
 Each ≤ 400 words. Each prioritises structural findings first, nits last.
 
@@ -78,13 +79,13 @@ Be ambitious. False positives here are cheap — one "no" in a thread. The
 findings you DON'T surface are the expensive ones, because missed structural
 improvements compound silently. So over-suggest, but always rank.
 
-## 4. Aggregate
+### 4. Aggregate
 
 Report under `## Standards`, `## Spec`, `## Architecture`. **Do not merge or
 rerank across axes** — the independence is what keeps one axis from masking
 another.
 
-## 5. Verdict (Approval Bar)
+### 5. Verdict (Approval Bar)
 
 End with **approve** / **request changes**, judged against this bar.
 Presumptive blockers (any one justifies request-changes):
