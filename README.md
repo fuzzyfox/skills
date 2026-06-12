@@ -27,10 +27,32 @@ Use these skills when you want to package the current session for another agent 
   npx skills add fuzzyfox/skills --skill handoff
   ```
 
-- **[spawn](./skills/spawn/SKILL.md)** - Create a handoff and open a new agent session in a fresh `tmux` window so work can continue in parallel or with a clean context.
+- **[spawn](./skills/spawn/SKILL.md)** - Create a handoff and open a new agent session in a fresh `tmux` window, wiring up a mailbox return channel so the child can hand work back.
 
   ```bash
   npx skills add fuzzyfox/skills --skill spawn
+  ```
+
+### Inter-Agent Mailbox
+
+Use these skills when one agent session needs to hand work to another and receive replies, across any harness (Claude Code, Codex, OpenCode). `mailbox` is the ability (the filesystem fabric); `handback` and `dispatch` are thin procedures that wield it.
+
+- **[mailbox](./skills/mailbox/SKILL.md)** - Pure-filesystem inter-agent mailbox: per-session inboxes, atomic delivery of `handoff` documents, a name registry, and a turn-open wait flow. Ships `scripts/mailbox.sh` (the engine) with zero-dependency tests.
+
+  ```bash
+  npx skills add fuzzyfox/skills --skill mailbox
+  ```
+
+- **[handback](./skills/handback/SKILL.md)** - Return your work to the parent that spawned you by producing a handoff and sending it back through the mailbox. The primary return workflow for a spawned child.
+
+  ```bash
+  npx skills add fuzzyfox/skills --skill handback
+  ```
+
+- **[dispatch](./skills/dispatch/SKILL.md)** - Send a handoff document to a named peer agent through the mailbox ("dispatch to `<name>`"), bridging two independently-started sessions.
+  
+  ```bash
+  npx skills add fuzzyfox/skills --skill dispatch
   ```
 
 ### Delivery
