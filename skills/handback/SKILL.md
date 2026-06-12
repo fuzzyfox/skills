@@ -26,3 +26,7 @@ of your message-zero, the spawn handoff you drained on launch.
 
 If there is no `spawn:` message-zero you were not spawned, so there is no parent —
 use `dispatch` to send to a named peer instead.
+
+If your handoff asks the parent to do any further mailbox work, name the **flow**
+("`check` your inbox", "`reply` to thread back"), never the `mb_*` engine functions
+— the flow doc carries the discipline a bare function name would leave behind.

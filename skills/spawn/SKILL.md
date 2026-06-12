@@ -17,10 +17,13 @@ Run `/handoff` (passing any user arguments through) to produce the handoff docum
 ## With a mailbox
 
 Run the mailbox `setup` flow if you haven't (so you have a stable id to reply to),
-then `send` the handoff as the child's **message-zero** to a fresh child inbox.
-Launch the child (below), handing it its own id and your shared root in the
-environment and a prompt telling it to use its mailbox skill — message-zero is its
-handoff. It bootstraps the rest itself.
+then provision and name the child's inbox as you create it. `send` the handoff as the child's **message-zero** to that inbox.
+
+Launch the child (below) with its id, name, and the shared mailbox root — message-zero is its handoff and it bootstraps the rest itself.
+
+When you tell the child how to return work, name the **flow** ("use the `handback`
+skill", or "run your mailbox `reply` flow"), never engine functions — the flow doc
+carries the discipline a bare function name would strand it without.
 
 - **Fire-and-forget (default)** — return to your work; it's the operator's call to ask for a mailbox check later.
 - **Follow to completion** — run the mailbox `wait` flow now, and on mail, action the reply if it's from the session you just spawned.
@@ -43,8 +46,9 @@ tmux new-window -n "$TITLE" "$AGENT $PROMPT"
 `$PROMPT` differs by branch — and `opencode` takes its prompt via `--prompt`, not
 as a bare argument, so it gets its own form:
 
-- **Mailbox** — prefix the env contract; `$PROMPT` is the bootstrap instruction
-  (*"use your mailbox skill — your first message is your handoff"*):
+- **Mailbox** — prefix the env contract (`$ROOT` is the shared mailbox root you
+  delivered message-zero to, not a hand-rolled default); `$PROMPT` is the bootstrap
+  instruction (*"use your mailbox skill — your first message is your handoff"*):
   - `claude`/`codex`: `AGENT_MAILBOX_DIR='$ROOT' AGENT_MAILBOX_ID='$child_id' $AGENT "$PROMPT"`
   - `opencode`: `AGENT_MAILBOX_DIR='$ROOT' AGENT_MAILBOX_ID='$child_id' opencode --prompt "$PROMPT"`
 - **No mailbox** — `$PROMPT` carries the handoff path:

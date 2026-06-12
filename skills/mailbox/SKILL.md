@@ -34,6 +34,13 @@ Read the flow you need; each is a self-contained doc:
 - **[takeover](references/takeover.md)** — adopt an existing mailbox identity by name ("take over Alice's mailbox"), e.g. after a crash/resume or to map a screen to a name.
 - **[prune](references/prune.md)** — list the registered mailboxes and remove the ones the operator names, freeing their friendly names.
 
+When you instruct **another agent** to use the mailbox — anything you write into a
+handoff or message body — name the **flow** ("run your mailbox skill's `reply`
+flow"), never the `mb_*` engine functions. The flow doc carries the surrounding
+discipline (archive-after-ingest, resolve-by-name-never-id, root reconciliation); a
+bare function name strands the reader without it. The `mb_*` interface is for the
+agent already inside a flow, not for cross-agent instruction.
+
 ## Direct Invocation
 
 If the operator invokes this skill with a flow name (e.g. `/mailbox check`, `/mailbox prune`), treat 

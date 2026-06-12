@@ -199,3 +199,43 @@ test_register_no_flock_fallback() {
 	else assert_eq err ok "no-flock fallback must write valid JSON"; fi
 	assert_eq "$(mb_names | sort | tr '\n' ' ')" "alice bob " "fallback records all names"
 }
+
+test_register_names_explicit_child_id() {
+	# A parent provisions a child inbox and registers the child's name against the
+	# child's id — not its own — so the inbox is named the instant it exists.
+	export AGENT_MAILBOX_ID="id-parent"
+	mb_ensure_inbox "id-child"
+	assert_eq "$(mb_register alice id-child)" "alice" "mb_register claims a name for an explicit child id"
+	assert_eq "$(mb_lookup alice | cut -f1)" "id-child" "the name resolves to the child id, not the registrant"
+	assert_eq "$(mb_whois id-child)" "alice" "the child can recover its assigned name via mb_whois (adoption)"
+	assert_eq "$(mb_whois id-parent)" "" "the registrant's own id is left unnamed"
+}
+
+# --- missing-root warning (the silent 'no mail' trap) ------------------------
+
+test_list_warns_when_root_missing() {
+	# A wrong/unset AGENT_MAILBOX_DIR and a genuinely empty inbox both make mb_list
+	# return empty; the warning is the one signal that distinguishes them.
+	export AGENT_MAILBOX_ID="alice"   # note: no mb_ensure_inbox, so the root is absent
+	local err; err="$(mb_list 2>&1 >/dev/null)"
+	assert_match "$err" "does not exist" "mb_list warns on stderr when the resolved root is missing"
+}
+
+test_list_silent_when_root_exists() {
+	export AGENT_MAILBOX_ID="alice"
+	mb_ensure_inbox                   # creates the root + maildir
+	local err; err="$(mb_list 2>&1 >/dev/null)"
+	assert_eq "$err" "" "mb_list stays silent when the root exists (no false warning)"
+}
+
+test_list_warns_once_per_process() {
+	# The guard is per-process; call twice in the SAME shell (no command-subst around
+	# the call, which would fork and lose the flag) and capture stderr to files.
+	export AGENT_MAILBOX_ID="alice"   # root absent
+	local e1 e2; e1="$(mktemp)"; e2="$(mktemp)"
+	mb_list 2>"$e1" >/dev/null
+	mb_list 2>"$e2" >/dev/null
+	assert_match "$(cat "$e1")" "does not exist" "first mb_list warns about the missing root"
+	assert_eq "$(cat "$e2")" "" "second mb_list stays silent (warn-once-per-process)"
+	rm -f "$e1" "$e2"
+}

@@ -22,3 +22,7 @@ sessions once each has set up its mailbox.
 
 If no mailbox is registered under `name`, list the known names (`mb_names`) so the
 operator can correct it — never guess an id.
+
+Anything you write into the handoff for the peer to act on should name the **flow**
+it ought to run ("reply via your mailbox `reply` flow"), never the `mb_*` engine
+functions — so the surrounding flow discipline travels with the instruction.

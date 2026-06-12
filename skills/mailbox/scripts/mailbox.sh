@@ -19,6 +19,19 @@ mb_root() {
 	printf '%s' "${AGENT_MAILBOX_DIR:-/tmp/agent-mailbox}"
 }
 
+# Warn (once per process) when the resolved root does not exist on disk. A missing
+# root and an empty inbox are otherwise indistinguishable on the read path: both
+# make mb_list return empty/exit-0, so a wrong AGENT_MAILBOX_DIR silently looks
+# like "no mail". This is the single signal that turns that silent trap into a
+# diagnosable one. Idempotent so callers in a loop don't spam stderr.
+_mb_warn_if_missing_root() {
+	local root; root="$(mb_root)"
+	[ -d "$root" ] && return 0
+	[ -n "${_MB_WARNED_MISSING_ROOT:-}" ] && return 0
+	_MB_WARNED_MISSING_ROOT=1
+	printf 'mailbox: resolved root %s does not exist — AGENT_MAILBOX_DIR may be wrong or unset; "no mail" here is unreliable.\n' "$root" >&2
+}
+
 # Absolute path of an agent's inbox directory tree root.
 mb_dir() { # <id>
 	printf '%s/%s' "$(mb_root)" "$1"
@@ -96,6 +109,7 @@ mb_send() {
 # Read-state is location, not a flag: unread == in inbox/, consumed == in archive/.
 mb_list() { # [id]  -> pending inbox paths, chronological (lexical == chrono)
 	local id="${1:-$(mb_resolve_self)}" inbox
+	_mb_warn_if_missing_root
 	inbox="$(mb_dir "$id")/inbox"
 	[ -d "$inbox" ] || return 0
 	find "$inbox" -maxdepth 1 -type f -name '*.md' 2>/dev/null | sort
@@ -233,9 +247,14 @@ _mb_register_impl() { # <name> <id>
 # Claim a non-colliding friendly name; prints the name, or 'collision'.
 # The agent generates the name (a common given name in the operator's current
 # conversation language) and retries on collision with a different one.
-mb_register() { # [name]
-	local name="${1:-}" id
-	id="$(mb_resolve_self)"
+#
+# Names self by default. Pass an explicit <id> to name *another* agent you just
+# created — a parent naming the child whose inbox it provisioned — so a freshly
+# spawned inbox is never nameless: its registry entry exists the instant the inbox
+# does, before the child even boots. (The stamped pid is the registrant's, a
+# passive hint either way — see takeover's caveats.)
+mb_register() { # [name] [id]
+	local name="${1:-}" id="${2:-$(mb_resolve_self)}"
 	[ -n "$name" ] || name="agent-$(_mb_mint_id | tr -cd '0-9a-f' | cut -c1-4)"
 	_mb_with_lock _mb_register_impl "$name" "$id"
 }

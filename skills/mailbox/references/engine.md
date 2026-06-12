@@ -19,7 +19,7 @@ skipped when absent.
 | `mb_list [id]` | pending inbox paths, chronological |
 | `mb_archive <path\|name>` | `mv` inbox → archive (idempotent) |
 | `mb_wait [timeout-s] [id]` | block until mail arrives — `fswatch` if installed, else bounded `sleep`-poll; 0 on mail, non-zero on timeout |
-| `mb_register [name]` | claim a non-colliding name; prints name or `collision` |
+| `mb_register [name] [id]` | claim a non-colliding name for self, or for an explicit `id` (naming a child you provisioned); prints name or `collision` |
 | `mb_lookup <name>` | name → `<id>\t<inbox>` |
 | `mb_names` | list registered names |
 | `mb_whois <id>` | id → friendly name |
