@@ -5,6 +5,7 @@ threaded via `reply_to` so the conversation can be followed. See
 [engine.md](engine.md) for the interface.
 
 `$MSG` is the path of the message you are replying to (e.g. from `mb_list`).
+Compose the body per [compose.md](compose.md) and stream it in via `-`:
 
 ```bash
 . "<this skill's path>/scripts/mailbox.sh"
@@ -12,7 +13,9 @@ threaded via `reply_to` so the conversation can be followed. See
 sender="$(sed -nE 's/^from: //p'   "$MSG" | head -1)"
 mid="$(   sed -nE 's/^msg_id: //p' "$MSG" | head -1)"
 
-mb_send "$sender" "$REPLY_PATH" "re: auth flow" "$mid"
+mb_send "$sender" - "re: auth flow" "$mid" <<'__MB__'
+… body composed per compose.md …
+__MB__
 ```
 
 - The 4th argument sets `reply_to` in the new message's envelope.

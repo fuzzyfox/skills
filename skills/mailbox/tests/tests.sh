@@ -64,6 +64,22 @@ test_send_is_atomic() {
 	assert_nfiles "$(mb_dir alice)/tmp" 0 "tmp/ staging is empty after delivery"
 }
 
+test_send_reads_body_from_stdin() {
+	export AGENT_MAILBOX_ID="bob"
+	local name body
+	name="$(mb_send alice - "streamed findings" <<'__MB__'
+# Findings
+
+The `auth` flow is sound. No $vars expand.
+__MB__
+)"
+	assert_nfiles "$(mb_dir alice)/inbox" 1 "stdin body delivered as one message"
+	assert_nfiles "$(mb_dir alice)/tmp" 0 "tmp/ staging empty after stdin delivery"
+	body="$(cat "$(mb_dir alice)/inbox/$name")"
+	assert_match "$body" 'The `auth` flow is sound\. No \$vars expand\.' \
+		"stdin body lands verbatim (backticks and \$ preserved)"
+}
+
 test_send_filename_is_chronological_and_slugged() {
 	export AGENT_MAILBOX_ID="bob"
 	local body="$(_mk_body)" name

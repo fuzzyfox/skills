@@ -77,7 +77,9 @@ _mb_slug() { # <text>
 # deliver: write to <root>/<target>/tmp, then atomic mv into inbox/ — a triaging
 # reader never head's a half-written file because mv within a filesystem is atomic.
 #
-#   mb_send <target-id> <body-file> [subject] [reply_to]   -> prints filename
+#   mb_send <target-id> <body-file|-> [subject] [reply_to]   -> prints filename
+# A body of `-` reads the body from stdin (cat -), so a caller can stream the
+# composed text straight in via a heredoc without ever touching a file.
 mb_send() {
 	local target="$1" body="$2" subject="${3:-message}" reply_to="${4:-}"
 	local from msg_id ts hex8 slug name d tmpf

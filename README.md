@@ -27,7 +27,7 @@ Use these skills when you want to package the current session for another agent 
   npx skills add fuzzyfox/skills --skill handoff
   ```
 
-- **[spawn](./skills/spawn/SKILL.md)** - Create a handoff and open a new agent session in a fresh `tmux` window, wiring up a mailbox return channel so the child can hand work back.
+- **[spawn](./skills/spawn/SKILL.md)** - Create a handoff and open a new agent session in a fresh `tmux` window to continue the work. Unidirectional and fire-and-forget; reach for `dispatch` when you want the child to be able to report back.
 
   ```bash
   npx skills add fuzzyfox/skills --skill spawn
@@ -43,13 +43,13 @@ Use these skills when one agent session needs to hand work to another and receiv
   npx skills add fuzzyfox/skills --skill mailbox
   ```
 
-- **[handback](./skills/handback/SKILL.md)** - Return your work to the parent that spawned you by producing a handoff and sending it back through the mailbox. The primary return workflow for a spawned child.
+- **[handback](./skills/handback/SKILL.md)** - Return your work to the parent that created you by composing a handoff and sending it back through the mailbox. The primary return workflow for a child created via `dispatch`.
 
   ```bash
   npx skills add fuzzyfox/skills --skill handback
   ```
 
-- **[dispatch](./skills/dispatch/SKILL.md)** - Send a handoff document to a named peer agent through the mailbox ("dispatch to `<name>`"), bridging two independently-started sessions.
+- **[dispatch](./skills/dispatch/SKILL.md)** - Hand work to another agent through the mailbox: send to a named peer ("dispatch to `<name>`"), or, when no name is given and the context calls for it, create a new agent wired to reply to you. The mailbox front door for both bridging existing sessions and spinning up a returning child.
   
   ```bash
   npx skills add fuzzyfox/skills --skill dispatch

@@ -1,8 +1,11 @@
 # Flow: send
 
-Deliver a `handoff` document to another agent's inbox, resolving the recipient by
-their friendly name. Delivery is atomic (write-then-rename), so the recipient
-never reads a half-written message. See [engine.md](engine.md) for the interface.
+Deliver a message to another agent's inbox, resolving the recipient by their
+friendly name. Delivery is atomic (write-then-rename), so the recipient never
+reads a half-written message. See [engine.md](engine.md) for the interface.
+
+Compose the body per [compose.md](compose.md) and stream it straight in — `-`
+tells `mb_send` to read the body from stdin, so there is no file to write:
 
 ```bash
 . "<this skill's path>/scripts/mailbox.sh"
@@ -12,12 +15,14 @@ to_id="$(mb_lookup "alice" | cut -f1)"
 if [ -z "$to_id" ]; then
   echo "No agent named 'alice'. Known: $(mb_names | paste -sd, -)"
 else
-  mb_send "$to_id" "$HANDOFF_PATH" "auth flow findings"
+  mb_send "$to_id" - "auth flow findings" <<'__MB__'
+… body composed per compose.md …
+__MB__
 fi
 ```
 
-- `$HANDOFF_PATH` is a document produced by the `handoff` skill (the body).
-  `mb_send` wraps it in the envelope (`from`, `msg_id`, `subject`, `to`) for you.
+- The quoted heredoc delimiter (`<<'__MB__'`) keeps the body literal — `$` and
+  backticks are not expanded. Pick a delimiter the body itself won't contain.
 - The `subject` should be 3–8 words — it is what lets the recipient triage without
   opening the body.
 - Never guess an id. If `mb_lookup` finds nothing, list `mb_names` and let the

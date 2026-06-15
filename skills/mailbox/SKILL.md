@@ -6,7 +6,7 @@ license: MIT
 compatibility: Any *nix with coreutils. flock and fswatch are optional accelerants.
 metadata:
   author: William Duyck
-  version: "0.2"
+  version: "0.3"
 ---
 
 A pure-filesystem return channel between agent sessions. No daemon, no network,
@@ -27,12 +27,14 @@ once, then call the `mb_*` functions — never hand-edit the inbox or registry:
 Read the flow you need; each is a self-contained doc:
 
 - **[setup](references/setup.md)** — ensure your inbox exists, register a friendly name, and report it to the operator.
-- **[send](references/send.md)** — deliver a `handoff` document to another agent's inbox, resolved by name.
+- **[send](references/send.md)** — deliver a message to another agent's inbox, resolved by name.
 - **[reply](references/reply.md)** — answer a message you are holding, threaded back to its sender.
 - **[check](references/check.md)** — drain your inbox, triaging by frontmatter only, archiving each as you ingest it.
 - **[wait](references/wait.md)** — hold the turn open until mail arrives (bounded), then `check`.
 - **[takeover](references/takeover.md)** — adopt an existing mailbox identity by name ("take over Alice's mailbox"), e.g. after a crash/resume or to map a screen to a name.
 - **[prune](references/prune.md)** — list the registered mailboxes and remove the ones the operator names, freeing their friendly names.
+
+The body a `send` or `reply` carries is composed per **[compose.md](references/compose.md)** — a handoff written straight into the flow, no file on disk.
 
 When you instruct **another agent** to use the mailbox — anything you write into a
 handoff or message body — name the **flow** ("run your mailbox skill's `reply`

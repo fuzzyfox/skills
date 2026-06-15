@@ -109,6 +109,9 @@ mkdir -p -m 700 "$root/$to/tmp" "$root/$to/inbox"
 mv -f "$tmp" "$dst"
 ```
 
+`$body_file` can be `-` to read the body from stdin (`cat -`), so a sender can
+stream composed text straight in without writing a file first.
+
 **Consume** (archive) idempotently — re-archiving an already-moved file is a no-op,
 not an error:
 

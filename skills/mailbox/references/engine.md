@@ -15,7 +15,7 @@ skipped when absent.
 |---|---|
 | `mb_resolve_self` | my wire id (resolve, never recall — env `AGENT_MAILBOX_ID` wins) |
 | `mb_ensure_inbox [id]` | create `tmp/ inbox/ archive/` (mode 700) for self |
-| `mb_send <to-id> <body-file> [subject] [reply_to]` | atomically deliver; prints filename |
+| `mb_send <to-id> <body-file\|-> [subject] [reply_to]` | atomically deliver; prints filename. `-` reads the body from stdin (stream it in via a heredoc — see [compose.md](compose.md)) |
 | `mb_list [id]` | pending inbox paths, chronological |
 | `mb_archive <path\|name>` | `mv` inbox → archive (idempotent) |
 | `mb_wait [timeout-s] [id]` | block until mail arrives — `fswatch` if installed, else bounded `sleep`-poll; 0 on mail, non-zero on timeout |
