@@ -9,12 +9,14 @@ there is no hidden coordinator.
 ## 1. Root
 
 ```
-root = ${AGENT_MAILBOX_DIR:-/tmp/agent-mailbox}
+root = /tmp/agent-mailbox
 ```
 
-`AGENT_MAILBOX_DIR` always wins and is the explicit parent→child contract: a
-parent and child rendezvous by being given the same root. Create it `0700` so its
-contents stay private inside a sticky, world-writable `/tmp`:
+The root is **fixed** and **not configurable**: every agent on the host shares this
+one well-known path, so a parent and child rendezvous without passing any location
+around. A configurable root was a reliable source of agents hallucinating the path
+at setup; one constant removes that failure mode. Create it `0700` so its contents
+stay private inside a sticky, world-writable `/tmp`:
 
 ```bash
 mkdir -p -m 700 "$root"
@@ -127,10 +129,15 @@ An id is the **wire address** (the inbox directory name). The agent is responsib
 for choosing a **stable** id and then providing it on every call via the
 `AGENT_MAILBOX_ID` environment variable:
 
-1. **`$AGENT_MAILBOX_ID`**, when set, is the address. It is the explicit
-   parent→child contract (a parent passes it to a spawned child at launch) and the
-   way a peer agent carries its own id across calls.
-2. When it is unset, the agent **establishes** an id once, at setup:
+1. **`$AGENT_MAILBOX_ID`**, when set on a command, is the address that command acts
+   as — the way an agent carries its own id across calls.
+2. A **spawned child** is given its id in its **bootstrap prompt** (the launch
+   prompt / message-zero text), deterministically in-context. The child reads it
+   from the prompt and sets `AGENT_MAILBOX_ID` from it on every call. The id is
+   **not** passed through the launch environment: an agent reads an inherited env
+   var unreliably and may mint or hallucinate a different one, so the address must
+   be in the prompt the model actually sees.
+3. When neither applies, the agent **establishes** an id once, at setup:
    - prefer the **harness session id** if the agent can read one (e.g. an
      env/handle the harness exposes) — opaque and naturally stable;
    - otherwise **mint a UUID** (`uuidgen` / `/proc/sys/kernel/random/uuid`).
@@ -205,4 +212,6 @@ The root lives in `/tmp` and is reclaimed by the OS temp cleaner (macOS
 `tmp_cleaner` ~daily at a few days' age; Linux `systemd-tmpfiles` / tmpfs wipe on
 reboot). Self-pruning is a feature: dead inboxes and stale registry entries
 evaporate. The one hazard — a pending reply pruned after days of idleness — is an
-abandoned workflow; point `AGENT_MAILBOX_DIR` at a durable path to opt out.
+abandoned workflow; the root is fixed in `/tmp`, so a workflow that must outlive
+the temp cleaner should copy its artifacts somewhere durable rather than rely on
+the mailbox surviving.

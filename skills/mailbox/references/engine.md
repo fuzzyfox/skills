@@ -27,13 +27,15 @@ skipped when absent.
 
 ## Root and identity contract
 
-- `AGENT_MAILBOX_DIR` is the mailbox root — default `/tmp/agent-mailbox` — and the
-  explicit **parent→child contract**. It always wins.
+- The mailbox root is **fixed** at `/tmp/agent-mailbox`. It is **not** configurable
+  — every agent on the host shares this one well-known path, so a parent and child
+  rendezvous without passing any location around.
 - **The agent owns its id.** `mb_resolve_self` returns `AGENT_MAILBOX_ID` when set
-  — the stable contract — and otherwise mints a one-shot uuid. Establish your id
-  once at setup (your harness session id if you can read one, else a minted uuid),
-  then pass `AGENT_MAILBOX_ID` on every later call. `mb_lookup <my-name>` recovers
-  it without holding it in memory.
+  — the per-command "act as this id" arg — and otherwise mints a one-shot uuid. A
+  peer establishes its id once at setup (its harness session id if it can read one,
+  else a minted uuid); a **spawned child is told its id in its bootstrap prompt**.
+  Either way, pass `AGENT_MAILBOX_ID` on every later call. `mb_lookup <my-name>` 
+  recovers it without holding it in memory.
 - Per-inbox layout (Maildir discipline): `tmp/` = write-then-rename staging,
   `inbox/` = unread, `archive/` = consumed. Read-state is **location, not a flag**.
 - `flock` guards registry writes when present; `MB_NO_FLOCK=1` forces the

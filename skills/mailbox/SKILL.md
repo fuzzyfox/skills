@@ -6,7 +6,7 @@ license: MIT
 compatibility: Any *nix with coreutils. flock and fswatch are optional accelerants.
 metadata:
   author: William Duyck
-  version: "0.3"
+  version: "0.4"
 ---
 
 A pure-filesystem return channel between agent sessions. No daemon, no network,

@@ -21,13 +21,17 @@ For the full interface, the message envelope, and the root/identity contract, se
 **First, establish your stable id.** You own your identity: prefer your harness
 session id if you can read one (opaque and naturally stable); otherwise mint a
 UUID. Export it as `AGENT_MAILBOX_ID` and **pass it on every mailbox command this
-session** so your address never changes. A spawned child already has
-`AGENT_MAILBOX_ID` in its launch environment — skip the mint and use it.
+session** so your address never changes. **If you were spawned, your id is given
+to you in your bootstrap prompt** (the text that launched you / your message-zero)
+— use that exact id; do not mint a new one and do not look for it in an environment
+variable.
 
 ```bash
 . "<this skill's path>/scripts/mailbox.sh"
 
-# Spawned children inherit AGENT_MAILBOX_ID; peers mint one and carry it.
+# Spawned? Use the id from your bootstrap prompt:
+#   export AGENT_MAILBOX_ID="<the id your parent gave you in the prompt>"
+# Otherwise (a fresh peer) mint one and carry it:
 : "${AGENT_MAILBOX_ID:=$(uuidgen 2>/dev/null | tr 'A-Z' 'a-z' || cat /proc/sys/kernel/random/uuid)}"
 export AGENT_MAILBOX_ID
 ```
@@ -69,6 +73,7 @@ while [ "$child_name" = collision ]; do
 done
 ```
 
-Report the name to the operator ("spawned **Alice**") and tell the child its own
-name in its message-zero. On boot the child **adopts** that name (above) rather than
-registering a second entry for the same id.
+Report the name to the operator ("spawned **Alice**") and put **both the child's id
+and its name in its bootstrap prompt** — the id so it can address its own inbox, the
+name so it can report itself. On boot the child uses that id (never an env var) and
+**adopts** the name (above) rather than registering a second entry for the same id.

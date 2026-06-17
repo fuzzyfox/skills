@@ -13,23 +13,14 @@
 # All protocol logic lives here so the procedure skills stay thin.
 
 # --- root resolution ---------------------------------------------------------
-# AGENT_MAILBOX_DIR always wins and is the explicit parent->child contract.
-# Default is the simple, documented /tmp/agent-mailbox (single-user laptop).
+# The root is fixed: /tmp/agent-mailbox. It is NOT configurable — every agent on a
+# host shares this one well-known path, so a parent and child rendezvous without
+# passing any location around (a configurable root was a reliable source of agents
+# hallucinating the path at setup). MB_TEST_ROOT is a test-only seam the test
+# harness uses to isolate throwaway roots; it is NOT part of the protocol and no
+# agent-facing reference mentions it — agents must never set it.
 mb_root() {
-	printf '%s' "${AGENT_MAILBOX_DIR:-/tmp/agent-mailbox}"
-}
-
-# Warn (once per process) when the resolved root does not exist on disk. A missing
-# root and an empty inbox are otherwise indistinguishable on the read path: both
-# make mb_list return empty/exit-0, so a wrong AGENT_MAILBOX_DIR silently looks
-# like "no mail". This is the single signal that turns that silent trap into a
-# diagnosable one. Idempotent so callers in a loop don't spam stderr.
-_mb_warn_if_missing_root() {
-	local root; root="$(mb_root)"
-	[ -d "$root" ] && return 0
-	[ -n "${_MB_WARNED_MISSING_ROOT:-}" ] && return 0
-	_MB_WARNED_MISSING_ROOT=1
-	printf 'mailbox: resolved root %s does not exist — AGENT_MAILBOX_DIR may be wrong or unset; "no mail" here is unreliable.\n' "$root" >&2
+	printf '%s' "${MB_TEST_ROOT:-/tmp/agent-mailbox}"
 }
 
 # Absolute path of an agent's inbox directory tree root.
@@ -39,10 +30,12 @@ mb_dir() { # <id>
 
 # --- identity ----------------------------------------------------------------
 # The agent owns its identity. mb_resolve_self returns AGENT_MAILBOX_ID when set
-# — the explicit, stable contract — and otherwise mints a one-shot uuid. The
-# agent establishes its id once at setup (its harness session id if it can read
-# one, else a minted uuid), then passes AGENT_MAILBOX_ID on every later call so
-# the address stays stable. `mb_lookup <my-name>` recovers it without recall.
+# — the per-command "act as this id" arg — and otherwise mints a one-shot uuid. A
+# peer establishes its id once at setup (its harness session id if it can read one,
+# else a minted uuid); a spawned child is *told* its id in its bootstrap prompt
+# (never inherited from the launch environment, which agents read unreliably).
+# Either way the agent then passes AGENT_MAILBOX_ID on every later call so the
+# address stays stable. `mb_lookup <my-name>` recovers it without recall.
 _mb_mint_id() {
 	if command -v uuidgen >/dev/null 2>&1; then uuidgen | tr 'A-Z' 'a-z'
 	elif [ -r /proc/sys/kernel/random/uuid ]; then cat /proc/sys/kernel/random/uuid
@@ -111,7 +104,6 @@ mb_send() {
 # Read-state is location, not a flag: unread == in inbox/, consumed == in archive/.
 mb_list() { # [id]  -> pending inbox paths, chronological (lexical == chrono)
 	local id="${1:-$(mb_resolve_self)}" inbox
-	_mb_warn_if_missing_root
 	inbox="$(mb_dir "$id")/inbox"
 	[ -d "$inbox" ] || return 0
 	find "$inbox" -maxdepth 1 -type f -name '*.md' 2>/dev/null | sort

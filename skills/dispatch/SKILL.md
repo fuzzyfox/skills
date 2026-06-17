@@ -5,7 +5,7 @@ argument-hint: "[to <name>] [— what to send]"
 license: MIT
 metadata:
   author: William Duyck
-  version: "0.2"
+  version: "0.3"
 ---
 
 The mailbox front door for handing work to another session. Two destinations
@@ -51,12 +51,18 @@ Provision and name the child's inbox, deliver its **message-zero**, then launch 
   from the focus, running the same agent CLI that invoked this skill. If tmux is
   unavailable, print the command and ask the operator to run it manually.
 
-`$ROOT` is the shared mailbox root, `$child_id` the id you just provisioned, and
-`$PROMPT` the bootstrap instruction (*"use your mailbox skill — your first message
-is your handoff"*). `opencode` takes its prompt via `--prompt`:
+The child's id travels in its **bootstrap prompt**, not the environment — an agent
+reads an inherited env var unreliably and may mint a fresh id, so put the id in the
+prompt text the model actually sees. `$child_id` is the id you just provisioned and
+`$PROMPT` is the bootstrap instruction, which **must name that id explicitly**, e.g.
+*"Use your mailbox skill. Your mailbox id is `<child_id>` and your name is
+`<child_name>` — set `AGENT_MAILBOX_ID` to that id, then run your `check` flow; your
+first message (subject `spawn:`) is your handoff."* The root is the fixed
+`/tmp/agent-mailbox`, so nothing about location is passed. `opencode` takes its
+prompt via `--prompt`:
 
 ```bash
-tmux new-window -n "$TITLE" "AGENT_MAILBOX_DIR='$ROOT' AGENT_MAILBOX_ID='$child_id' $AGENT \"$PROMPT\""
+tmux new-window -n "$TITLE" "$AGENT \"$PROMPT\""
 # opencode: … $AGENT --prompt "$PROMPT"
 ```
 

@@ -35,11 +35,11 @@ The functions this flow needs (full interface in [engine.md](engine.md)):
    ```
 
 2. For each name the operator approves, delete its inbox tree and drop its registry
-   entry. The registry is `<root>/registry.json`
-   (`root = ${AGENT_MAILBOX_DIR:-/tmp/agent-mailbox}`):
+   entry. The registry is `<root>/registry.json`, and the root is the fixed
+   `/tmp/agent-mailbox`:
 
    ```bash
-   root="${AGENT_MAILBOX_DIR:-/tmp/agent-mailbox}"
+   root="/tmp/agent-mailbox"
    id="$(mb_lookup "alice" | cut -f1)"
    rm -rf "$(mb_dir "$id")"                       # delete the inbox tree
    if command -v jq >/dev/null 2>&1; then         # drop "alice" from the registry

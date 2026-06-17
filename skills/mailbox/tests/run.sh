@@ -52,7 +52,7 @@ run_test() { # <fn-name>
 	local root out rc
 	root="$(mktemp -d "${TMPDIR:-/tmp}/mbtest.XXXXXX")"
 	out="$(
-		export AGENT_MAILBOX_DIR="$root/agent-mailbox"
+		export MB_TEST_ROOT="$root/agent-mailbox"
 		# shellcheck disable=SC1090
 		. "$ENGINE" 2>&1 || { echo "not ok - could not source engine"; exit 1; }
 		"$1" 2>&1

@@ -1,19 +1,18 @@
 #!/usr/bin/env bash
 # tests.sh — behavioral tests for mailbox.sh, sourced by run.sh.
 #
-# Each test_* function runs in an isolated subshell with the engine sourced and
-# AGENT_MAILBOX_DIR pointed at a throwaway root. Assert through the public mb_*
-# interface and observable filesystem state — never internal implementation.
+# Each test_* function runs in an isolated subshell with the engine sourced and the
+# test-only MB_TEST_ROOT seam pointed at a throwaway root. Assert through the public
+# mb_* interface and observable filesystem state — never internal implementation.
 
 # --- root resolution ---------------------------------------------------------
 
-test_root_default() {
-	unset AGENT_MAILBOX_DIR
-	assert_eq "$(mb_root)" "/tmp/agent-mailbox" "default root is /tmp/agent-mailbox"
-}
-
-test_root_override() {
-	assert_eq "$(mb_root)" "$AGENT_MAILBOX_DIR" "AGENT_MAILBOX_DIR overrides default"
+test_root_is_fixed() {
+	# The production root is the fixed /tmp/agent-mailbox — not configurable. (Tests
+	# isolate via the MB_TEST_ROOT seam, which run.sh sets; clearing it reveals the
+	# hardcoded default.)
+	unset MB_TEST_ROOT
+	assert_eq "$(mb_root)" "/tmp/agent-mailbox" "root is the fixed /tmp/agent-mailbox"
 }
 
 # --- identity ----------------------------------------------------------------
@@ -225,33 +224,4 @@ test_register_names_explicit_child_id() {
 	assert_eq "$(mb_lookup alice | cut -f1)" "id-child" "the name resolves to the child id, not the registrant"
 	assert_eq "$(mb_whois id-child)" "alice" "the child can recover its assigned name via mb_whois (adoption)"
 	assert_eq "$(mb_whois id-parent)" "" "the registrant's own id is left unnamed"
-}
-
-# --- missing-root warning (the silent 'no mail' trap) ------------------------
-
-test_list_warns_when_root_missing() {
-	# A wrong/unset AGENT_MAILBOX_DIR and a genuinely empty inbox both make mb_list
-	# return empty; the warning is the one signal that distinguishes them.
-	export AGENT_MAILBOX_ID="alice"   # note: no mb_ensure_inbox, so the root is absent
-	local err; err="$(mb_list 2>&1 >/dev/null)"
-	assert_match "$err" "does not exist" "mb_list warns on stderr when the resolved root is missing"
-}
-
-test_list_silent_when_root_exists() {
-	export AGENT_MAILBOX_ID="alice"
-	mb_ensure_inbox                   # creates the root + maildir
-	local err; err="$(mb_list 2>&1 >/dev/null)"
-	assert_eq "$err" "" "mb_list stays silent when the root exists (no false warning)"
-}
-
-test_list_warns_once_per_process() {
-	# The guard is per-process; call twice in the SAME shell (no command-subst around
-	# the call, which would fork and lose the flag) and capture stderr to files.
-	export AGENT_MAILBOX_ID="alice"   # root absent
-	local e1 e2; e1="$(mktemp)"; e2="$(mktemp)"
-	mb_list 2>"$e1" >/dev/null
-	mb_list 2>"$e2" >/dev/null
-	assert_match "$(cat "$e1")" "does not exist" "first mb_list warns about the missing root"
-	assert_eq "$(cat "$e2")" "" "second mb_list stays silent (warn-once-per-process)"
-	rm -f "$e1" "$e2"
 }
