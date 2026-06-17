@@ -1,7 +1,7 @@
 ---
 name: dispatch
 description: Hand work to another agent through the mailbox — send to a named existing peer, or, when no name is given and the context calls for it, create a new agent wired to reply to you. Use when the operator says "dispatch to <name>" or "dispatch this to a new agent", optionally refining what to send.
-argument-hint: dispatch [to <name>] [— what to send]
+argument-hint: [to <name>] [— what to send]
 license: MIT
 metadata:
   author: William Duyck
