@@ -49,7 +49,7 @@ Use these skills when one agent session needs to hand work to another and receiv
   npx skills add fuzzyfox/skills --skill handback
   ```
 
-- **[dispatch](./skills/dispatch/SKILL.md)** - Hand work to another agent through the mailbox: send to a named peer ("dispatch to `<name>`"), or, when no name is given and the context calls for it, create a new agent wired to reply to you. The mailbox front door for both bridging existing sessions and spinning up a returning child.
+- **[dispatch](./skills/dispatch/SKILL.md)** - Dispatch work to another agent through the mailbox: to a named peer ("dispatch to `<name>`"), or, when no name is given and the context calls for it, a new agent wired to reply to you. The mailbox front door for both bridging existing sessions and spinning up a returning child.
   
   ```bash
   npx skills add fuzzyfox/skills --skill dispatch

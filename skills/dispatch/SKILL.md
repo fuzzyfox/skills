@@ -1,6 +1,6 @@
 ---
 name: dispatch
-description: Hand work to another agent through the mailbox — send to a named existing peer, or, when no name is given and the context calls for it, create a new agent wired to reply to you. Use when the operator says "dispatch to <name>" or "dispatch this to a new agent", optionally refining what to send.
+description: Dispatch work to another agent through the mailbox to a named existing peer, or to a new agent wired to reply to you. Use when the operator says "dispatch to <name>" or "dispatch this to a new agent", optionally refining what to send.
 argument-hint: "[to <name>] [— what to send]"
 license: MIT
 metadata:
@@ -8,11 +8,9 @@ metadata:
   version: "0.3"
 ---
 
-The mailbox front door for handing work to another session. Two destinations
-behind one verb: an **existing** peer named by the operator, or a **new** agent you
-create and wire to reply to you. Either way the body is composed per the mailbox
-[`compose`](../mailbox/references/compose.md) rules and streamed straight into the
-`send` flow — there is no handoff file.
+The mailbox front door for handing work off. Either destination composes the body
+per the mailbox [`compose`](../mailbox/references/compose.md) rules and streams it
+straight into the `send` flow — no handoff file on disk.
 
 Make sure your own inbox exists first (mailbox `setup` flow) so the recipient can
 reply.
@@ -28,8 +26,8 @@ Parse the operator's request into a recipient `name` (if any) and an optional
 3. **No name, and the context clearly calls for a fresh delegate** → create a new
    agent (below).
 4. **No name, and it's ambiguous** — you can't tell whether the operator meant an
-   existing peer or a new one → **ask the operator** before doing either. Creating
-   an agent launches a process; don't do it on a guess.
+   existing peer or a new one → **ask the operator** before doing either — creating
+   an agent launches a process, so confirm intent first.
 
 ## Send to an existing peer
 
@@ -39,8 +37,6 @@ once; otherwise it surfaces when the operator next prompts that session and it r
 `check`.
 
 ## Create a new agent
-
-Provision and name the child's inbox, deliver its **message-zero**, then launch it:
 
 - Mint a child id and ensure its inbox; register a friendly name for it (a common
   given name in the operator's current conversation language).
@@ -54,7 +50,7 @@ Provision and name the child's inbox, deliver its **message-zero**, then launch 
 The child's id travels in its **bootstrap prompt**, not the environment — an agent
 reads an inherited env var unreliably and may mint a fresh id, so put the id in the
 prompt text the model actually sees. `$child_id` is the id you just provisioned and
-`$PROMPT` is the bootstrap instruction, which **must name that id explicitly**, e.g.
+`$PROMPT` is the bootstrap prompt, which **must name that id explicitly**, e.g.
 *"Use your mailbox skill. Your mailbox id is `<child_id>` and your name is
 `<child_name>` — set `AGENT_MAILBOX_ID` to that id, then run your `check` flow; your
 first message (subject `spawn:`) is your handoff."* The root is the fixed
