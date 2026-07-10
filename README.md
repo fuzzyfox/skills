@@ -77,9 +77,9 @@ Use this skill when implementation is ready to publish and you want a GitHub PR 
 
 Use this skill when you want a branch or PR reviewed along separate standards, spec, and architecture axes rather than one blurred pass.
 
-- **[review](./skills/review/SKILL.md)** - Review changes since a fixed point along three independent axes (Standards, Spec, Architecture) using three parallel sub-agents, with an ambitious beyond-the-diff architecture pass and an explicit approval bar.
+- **[review](./skills/review/SKILL.md)** - Review changes since a fixed point along three independent axes (Standards, Spec, Architecture) using three parallel sub-agents that never share context. Standards carries a Fowler smell baseline; the Architecture axis asks whether the change goes with the grain — keeping the system coherent and cheaper to change — tiers its findings, and routes the single strongest deepening opportunity to a concrete `/improve-codebase-architecture` follow-up. Ends on an explicit approval bar.
 
-  Source: adapted from Matt Pocock's in-progress [`review`](https://github.com/mattpocock/skills/blob/main/skills/in-progress/review/SKILL.md) (dual-axis standards/spec design); the Architecture axis folds in ambition, "code judo", the file-size ceiling, and the approval bar from the Cursor team's [`thermo-nuclear-code-quality-review`](https://github.com/cursor/plugins/blob/main/cursor-team-kit/skills/thermo-nuclear-code-quality-review/SKILL.md).
+  Source: structure and the Standards/Spec axes adapted from Matt Pocock's [`code-review`](https://github.com/mattpocock/skills/blob/main/skills/engineering/code-review/SKILL.md) (dual-axis design plus the Fowler smell baseline); the Architecture axis draws its depth vocabulary (module, interface, depth, seam, deletion test) and the escalation follow-up from Matt Pocock / AI Hero's `codebase-design` and [`improve-codebase-architecture`](https://github.com/mattpocock/skills/blob/main/skills/engineering/improve-codebase-architecture/SKILL.md), and folds in "code judo", the file-size ceiling, and the approval bar from the Cursor team's [`thermo-nuclear-code-quality-review`](https://github.com/cursor/plugins/blob/main/cursor-team-kit/skills/thermo-nuclear-code-quality-review/SKILL.md).
 
   ```bash
   npx skills add fuzzyfox/skills --skill review
