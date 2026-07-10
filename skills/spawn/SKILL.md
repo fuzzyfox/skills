@@ -1,6 +1,7 @@
 ---
 name: spawn
-description: Handoff the current conversation and open a new Claude instance in a fresh tmux window to continue the work. Use when the user wants to spin up a new agent session from the current one.
+description: Spawn a fresh agent session from the current one — hand the conversation off into a new tmux window that continues the work one-way, with no channel back. Use `dispatch` instead when the child must report back.
+disable-model-invocation: true
 argument-hint: What will the next session be used for?
 license: MIT
 metadata:
@@ -23,5 +24,7 @@ For `opencode`, instead, start it with an initial prompt that tells it to read t
 ```
 tmux new-window -n "$TITLE" "$AGENT --prompt \"Read the handoff document at $HANDOFF_PATH and continue from it.\""
 ```
+
+Confirm the window opened and report its name to the operator.
 
 If tmux is unavailable, print the path and prompt the user to run it manually.
