@@ -43,7 +43,7 @@ Use these skills when one agent session needs to hand work to another and receiv
   npx skills add fuzzyfox/skills --skill mailbox
   ```
 
-- **[handback](./skills/handback/SKILL.md)** - Return your work to the parent that created you by composing a handoff and sending it back through the mailbox. The primary return workflow for a child created via `dispatch`.
+- **[handback](./skills/handback/SKILL.md)** - Return your work to the parent that created you. The primary return workflow for a child created via `dispatch`.
 
   ```bash
   npx skills add fuzzyfox/skills --skill handback
