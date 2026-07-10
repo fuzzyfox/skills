@@ -1,6 +1,6 @@
 ---
 name: mailbox
-description: Pure-filesystem inter-agent mailbox so any agent session can send a handoff document to another and pick up replies. Use when you need to set up your mailbox, send or reply to another agent, check for or wait on incoming messages, resolve another agent by name, take over / claim an existing mailbox identity (e.g. "take over Alice's mailbox"), or prune stale mailboxes from the registry. The fabric beneath the spawn, handback, and dispatch skills.
+description: Inter-agent mailbox for sending a handoff to another agent session and picking up replies. Use when you need to set up your mailbox, send or reply to another agent, check for or wait on incoming mail, take over an existing mailbox identity (e.g. "take over Alice's mailbox"), or prune stale mailboxes. The fabric beneath the spawn, handback, and dispatch skills.
 argument-hint: "[setup|check|send|wait|reply|takeover|prune]"
 license: MIT
 compatibility: Any *nix with coreutils. flock and fswatch are optional accelerants.
@@ -9,9 +9,9 @@ metadata:
   version: "0.4"
 ---
 
-A pure-filesystem return channel between agent sessions. No daemon, no network,
-no harness-specific transport. Each session owns an inbox (a directory); a message
-is a `handoff` document with a tiny YAML envelope carrying a return address.
+A pure-filesystem return channel between agent sessions. Each session owns an inbox
+(a directory); a message is a `handoff` document with a tiny YAML envelope carrying
+a return address.
 Delivery is solved completely by the filesystem; **wake-up** is solved by whose
 turn is open (the `wait` flow).
 
@@ -36,22 +36,19 @@ Read the flow you need; each is a self-contained doc:
 
 The body a `send` or `reply` carries is composed per **[compose.md](references/compose.md)** — a handoff written straight into the flow, no file on disk.
 
-When you instruct **another agent** to use the mailbox — anything you write into a
-handoff or message body — name the **flow** ("run your mailbox skill's `reply`
-flow"), never the `mb_*` engine functions. The flow doc carries the surrounding
-discipline (archive-after-ingest, resolve-by-name-never-id, root reconciliation); a
-bare function name strands the reader without it. The `mb_*` interface is for the
-agent already inside a flow, not for cross-agent instruction.
+When you instruct **another agent** to do mailbox work, name the **flow** ("run
+your mailbox skill's `reply` flow"), never an `mb_*` engine function — see
+[compose.md](references/compose.md). The `mb_*` interface is for the agent already
+inside a flow, not for cross-agent instruction.
 
 ## Direct Invocation
 
-If the operator invokes this skill with a flow name (e.g. `/mailbox check`, `/mailbox prune`), treat 
-that as a request to **run that flow now**: carry it through best-effort to completion, asking only
-
-when the flow itself needs an answer (a recipient, a name to prune).
+If the operator invokes this skill with a flow name (e.g. `/mailbox check`, `/mailbox prune`), treat
+that as a request to **run that flow now**: carry it through to the flow's own completion (its inbox
+drained, its name reported, etc.), asking only when the flow needs an answer (a recipient, a name to prune).
 
 ## Reference
 
-- **[engine.md](references/engine.md)** — the `mb_*` function interface, the message envelope, and the root/identity contract.
-- **[protocol.md](references/protocol.md)** — the raw on-disk wire protocol, so an agent or operator can participate by hand without `mailbox.sh`.
+- **[protocol.md](references/protocol.md)** — the raw on-disk wire protocol (root/identity contract, envelope, filename rule), so an agent or operator can participate by hand without `mailbox.sh`.
+- **[engine.md](references/engine.md)** — the `mb_*` function interface, one implementation of that protocol.
 - Tests: `./tests/run.sh` (zero dependencies, any \*nix OS).

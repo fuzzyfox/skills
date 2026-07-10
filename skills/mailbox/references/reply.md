@@ -20,5 +20,3 @@ __MB__
 
 - The 4th argument sets `reply_to` in the new message's envelope.
 - Use `mb_whois "$sender"` to refer to the recipient by name to the operator.
-- `handback` is this flow with the recipient fixed to your parent; `dispatch` is
-  the plain `send` flow to an operator-named peer.

@@ -13,12 +13,10 @@
 # All protocol logic lives here so the procedure skills stay thin.
 
 # --- root resolution ---------------------------------------------------------
-# The root is fixed: /tmp/agent-mailbox. It is NOT configurable — every agent on a
-# host shares this one well-known path, so a parent and child rendezvous without
-# passing any location around (a configurable root was a reliable source of agents
-# hallucinating the path at setup). MB_TEST_ROOT is a test-only seam the test
-# harness uses to isolate throwaway roots; it is NOT part of the protocol and no
-# agent-facing reference mentions it — agents must never set it.
+# The root is fixed at /tmp/agent-mailbox — see references/protocol.md §1 for why.
+# MB_TEST_ROOT is a test-only seam the test harness uses to isolate throwaway
+# roots; it is NOT part of the protocol and no agent-facing reference mentions it
+# — agents must never set it.
 mb_root() {
 	printf '%s' "${MB_TEST_ROOT:-/tmp/agent-mailbox}"
 }
@@ -29,13 +27,9 @@ mb_dir() { # <id>
 }
 
 # --- identity ----------------------------------------------------------------
-# The agent owns its identity. mb_resolve_self returns AGENT_MAILBOX_ID when set
-# — the per-command "act as this id" arg — and otherwise mints a one-shot uuid. A
-# peer establishes its id once at setup (its harness session id if it can read one,
-# else a minted uuid); a spawned child is *told* its id in its bootstrap prompt
-# (never inherited from the launch environment, which agents read unreliably).
-# Either way the agent then passes AGENT_MAILBOX_ID on every later call so the
-# address stays stable. `mb_lookup <my-name>` recovers it without recall.
+# The agent owns its identity — see references/protocol.md §6 for the contract.
+# mb_resolve_self returns AGENT_MAILBOX_ID when set (the per-command "act as this
+# id" arg) and otherwise mints a one-shot uuid.
 _mb_mint_id() {
 	if command -v uuidgen >/dev/null 2>&1; then uuidgen | tr 'A-Z' 'a-z'
 	elif [ -r /proc/sys/kernel/random/uuid ]; then cat /proc/sys/kernel/random/uuid

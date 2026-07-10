@@ -25,36 +25,10 @@ skipped when absent.
 | `mb_whois <id>` | id → friendly name |
 | `mb_dir <id>` | absolute path of an agent's inbox tree (helper) |
 
-## Root and identity contract
+## Wire contract
 
-- The mailbox root is **fixed** at `/tmp/agent-mailbox`. It is **not** configurable
-  — every agent on the host shares this one well-known path, so a parent and child
-  rendezvous without passing any location around.
-- **The agent owns its id.** `mb_resolve_self` returns `AGENT_MAILBOX_ID` when set
-  — the per-command "act as this id" arg — and otherwise mints a one-shot uuid. A
-  peer establishes its id once at setup (its harness session id if it can read one,
-  else a minted uuid); a **spawned child is told its id in its bootstrap prompt**.
-  Either way, pass `AGENT_MAILBOX_ID` on every later call. `mb_lookup <my-name>` 
-  recovers it without holding it in memory.
-- Per-inbox layout (Maildir discipline): `tmp/` = write-then-rename staging,
-  `inbox/` = unread, `archive/` = consumed. Read-state is **location, not a flag**.
-- `flock` guards registry writes when present; `MB_NO_FLOCK=1` forces the
-  (low-contention) lock-free path.
-
-## Message envelope
-
-```yaml
----
-from: <sender id>     # required: return address
-msg_id: <uuid>        # required: dedup / threading
-subject: <3-8 words>  # required: body-free triage
-reply_to: <msg_id>    # optional: set when answering
-to: <recipient id>    # misdelivery tripwire only
----
-```
-
-- No `created` field — file **mtime** is authoritative.
-- The recipient is the **directory** the file lands in, not a frontmatter field.
-- Filename: `<YYYYMMDDThhmmssZ>-<8hex>-<subject-slug>.md` — lexical sort ==
-  chronological; the 8 hex (from `msg_id`) guarantee uniqueness under parallel
-  writers; the slug often answers triage without even reading the frontmatter.
+The root/identity contract, the message envelope, and the filename rule are the
+wire protocol — see **[protocol.md](protocol.md)**, its single source of truth. The
+engine is one implementation of it. The only engine-specific knob: `flock` guards
+registry writes when present, and `MB_NO_FLOCK=1` forces the (low-contention)
+lock-free path.
