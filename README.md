@@ -95,7 +95,7 @@ Use this skill when producing markdown reports, changelogs, or dashboards that n
   npx skills add fuzzyfox/skills --skill quickchart
   ```
 
-- **[changelog](./skills/changelog/SKILL.md)** - Generate a markdown changelog for the changes between a fixed point and `HEAD`, enriched with issue-tracker context, following Keep a Changelog headings and updating an existing `CHANGELOG.md` in place.
+- **[changelog](./skills/changelog/SKILL.md)** - Generate a markdown changelog for the changes between a fixed point and `HEAD`, enriched with issue-tracker context.
 
   Source: fixed-point mechanic adapted from Matt Pocock's in-progress [`review`](https://github.com/mattpocock/skills/blob/main/skills/in-progress/review/SKILL.md).
 
