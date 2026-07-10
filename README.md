@@ -67,10 +67,10 @@ Use this skill when implementation is done and you want to produce a clean commi
 
 Use this skill when implementation is ready to publish and you want a GitHub PR that follows the repository template, gives reviewers the right context, and updates a linked Linear issue.
 
-- **[create-pr](./skills/create-pr/SKILL.md)** - Create GitHub pull requests with repository templates, concise reviewer-focused descriptions, linked Linear issues, and issue state updates.
+- **[open-pr](./skills/open-pr/SKILL.md)** - Open, publish, or raise a GitHub PR that follows the repository template, gives reviewers concise context, and moves a linked Linear issue to Code Review.
 
   ```bash
-  npx skills add fuzzyfox/skills --skill create-pr
+  npx skills add fuzzyfox/skills --skill open-pr
   ```
 
 ### Code Review

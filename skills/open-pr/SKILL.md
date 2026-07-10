@@ -1,13 +1,11 @@
 ---
-name: create-pr
+name: open-pr
 description: Open, publish, or raise a GitHub pull request. Use when the user asks to create or publish a PR for a GitHub-backed codebase, especially when branches are Linear-issue-prefixed.
 license: MIT
 metadata:
   author: William Duyck
   version: "1.0"
 ---
-
-# Create PR
 
 ## Quick start
 
