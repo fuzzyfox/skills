@@ -1,6 +1,6 @@
 ---
 name: create-pr
-description: Creates GitHub pull requests with repository templates, concise reviewer-focused descriptions, and Linear issue state updates. Use when the user asks to open, create, raise, or publish a PR for a GitHub-backed codebase, especially when branches are Linear issue-prefixed.
+description: Open, publish, or raise a GitHub pull request. Use when the user asks to create or publish a PR for a GitHub-backed codebase, especially when branches are Linear-issue-prefixed.
 license: MIT
 metadata:
   author: William Duyck
@@ -14,10 +14,9 @@ metadata:
 Use this skill for the full PR publishing path:
 
 1. Inspect branch, diff, recent commits, and local context. Assume development and testing already happened unless the user asks otherwise.
-2. Detect a repo PR template and preserve its agreed structure.
-3. Draft a concise PR body that helps reviewers understand the change without restating the obvious diff.
-4. Push the branch and create the PR with `gh pr create`.
-5. If the PR is not a draft and the branch starts with a Linear issue key, move that Linear issue to `Code Review` using the Linear MCP.
+2. Draft the PR body (see PR Body).
+3. Push the branch and create the PR (see Creating the PR).
+4. Move the Linear issue if the PR qualifies (see Linear Update).
 
 If `gh` is unavailable, stop and tell the user it is required. If the Linear MCP update fails, do not try another route; tell the user the tool failed.
 
@@ -41,7 +40,7 @@ Only add a testing or verification section when it gives reviewers useful contex
 
 Write for reviewers:
 
-- Explain what changed and why in a few complete sentences.
+- Explain what changed and why in a few complete sentences of plain-English prose, describing behaviour, not code.
 - Call out non-obvious implementation choices, migrations, config changes, compatibility risks, rollout concerns, and gotchas.
 - Link or mention related issues/PRs.
   - When mentioning Linear issues, ensure they're links to the actual issues, not just the issue IDs
@@ -55,15 +54,13 @@ Use Keep a Changelog-style categories as a thinking aid for key changes: `Added`
 
 Use `gh pr create` with an explicit title and body. Only create a draft when the operator explicitly asks for one.
 
-After creation, give the user the URL to the PR that was created.
+After creation, give the user the PR URL.
 
 ## Linear Update
 
-After a non-draft PR is created successfully:
+After a non-draft PR is created successfully, and only then:
 
 1. If the branch starts with a Linear issue key, fetch the issue through the Linear MCP.
 2. Move the issue to `Code Review`.
 
-Never move Linear for draft PRs. Never update Linear before the GitHub PR exists.
-
-Branch issue keys are only recognized in the form `ABC-123-branch-name`, where the key is at the start of the branch name.
+Move Linear only for non-draft PRs. Branch issue keys are only recognized in the form `ABC-123-branch-name`, where the key is at the start of the branch name.
