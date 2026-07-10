@@ -18,19 +18,7 @@ Conventional Commit shape:
 [optional footer(s)]
 ```
 
-Gitmoji-prefixed shape used by this skill:
-
-```text
-<gitmoji> <type>[optional scope][!]: <description>
-```
-
-Examples:
-
-```text
-✨ feat(search): add saved filters
-🐛 fix(api): reject empty webhook payloads
-💥 feat(config)!: remove legacy env fallback
-```
+The Quick start in `SKILL.md` shows the Gitmoji-prefixed variant this skill emits; see `EXAMPLES.md` for worked examples.
 
 ## Conventional Commit rules
 
@@ -44,9 +32,7 @@ Examples:
 
 ## Keep a Changelog guidance for commit authors
 
-Keep a Changelog is for humans, not machines. Commit messages are not changelog entries, but good commit messages make changelog curation easier.
-
-Favor subject and body wording that cleanly maps to these categories:
+Good commit messages make changelog curation easier. Favor subject and body wording that cleanly maps to these categories:
 
 - `Added`: new user-facing features or capabilities.
 - `Changed`: meaningful behavior changes, improvements, or migrations.
@@ -98,6 +84,7 @@ Use one Gitmoji per commit. Pick the strongest match for the dominant intent.
 - Prefer `🐛` over `🩹` unless the change is a very small non-critical patch and the team already uses `🩹`.
 - Prefer `🛂` over `🐛` when the primary value is security hardening.
 - Prefer `♻️` only for internal restructuring without user-facing fixes as the main story.
+- When two Gitmoji both fit, prefer the more general, widely understood option.
 
 ## Subject writing rules
 

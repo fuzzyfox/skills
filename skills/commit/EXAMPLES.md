@@ -42,7 +42,12 @@ Improves keyboard-only navigation for power users and screen-reader workflows.
 
 ## Decision examples
 
-- New capability with UI work: prefer `✨ feat(ui): add bulk edit toolbar` over `💄`.
-- Security hardening: prefer `🛂 fix(auth): reject unsigned session cookies` over `🐛`.
-- Internal cleanup without behavior change: prefer `♻️ refactor(api): remove duplicate serializer paths`.
-- Small non-user-facing build tweak: prefer `🔧 chore(ci): align node version` or `👷 ci: cache pnpm store`.
+These illustrate the tie-break rules in [REFERENCE.md](REFERENCE.md#choosing-among-close-options):
+
+```text
+✨ feat(ui): add bulk edit toolbar
+🛂 fix(auth): reject unsigned session cookies
+♻️ refactor(api): remove duplicate serializer paths
+🔧 chore(ci): align node version
+👷 ci: cache pnpm store
+```

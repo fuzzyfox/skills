@@ -59,10 +59,10 @@ Use these skills when one agent session needs to hand work to another and receiv
 
 Use this skill when implementation is done and you want to produce a clean commit message that matches the repo's intent and changelog semantics.
 
-- **[git-commit](./skills/git-commit/SKILL.md)** - Create git commits with a Gitmoji-prefixed Conventional Commit subject and changelog-aware messaging.
+- **[commit](./skills/commit/SKILL.md)** - Commit staged changes as a Gitmoji-prefixed Conventional Commit.
 
   ```bash
-  npx skills add fuzzyfox/skills --skill git-commit
+  npx skills add fuzzyfox/skills --skill commit
   ```
 
 Use this skill when implementation is ready to publish and you want a GitHub PR that follows the repository template, gives reviewers the right context, and updates a linked Linear issue.
