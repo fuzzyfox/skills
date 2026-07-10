@@ -21,7 +21,7 @@ Use these skills when you want to package the current session for another agent 
 
 - **[handoff](./skills/handoff/SKILL.md)** - Compact the current conversation into a handoff document for another agent to pick up.
 
-  Source: adapted from Matt Pocock.
+  Source: Matt Pocock, the only change is to make it model invokable.
 
   ```bash
   npx skills add fuzzyfox/skills --skill handoff
