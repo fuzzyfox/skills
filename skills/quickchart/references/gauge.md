@@ -60,4 +60,4 @@ Use for a **single KPI** against a known range (utilisation, target progress, NP
 - Always include the unit in the centre label (`72%`, `$2.4M`, `NPS 78`).
 - For radial gauges, set `domain` explicitly. Don't let the API guess.
 - Speedometer zones should be at most green/yellow/red. More zones lose meaning.
-- Don't gauge a metric without a meaningful min/max. "12,400 sessions" on a gauge is nonsense; use a number badge instead.
+- Only gauge a metric with a meaningful min/max. For an unbounded count like "12,400 sessions", use a number badge instead.

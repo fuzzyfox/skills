@@ -14,7 +14,7 @@
 | Show OHLC pricing | candlestick |
 | Show several metrics with different scales | mixed (bar + line, dual axis) |
 
-If in doubt: bar for comparison, line for trend, table for everything else. Avoid pie with more than six slices — switch to a stacked or horizontal bar.
+If in doubt: bar for comparison, line for trend, table for everything else.
 
 ## Sizing for markdown
 
@@ -22,8 +22,9 @@ Defaults (500×300, retina) work for README/PR body width. For inline placement 
 
 - **Hero / dashboard tile:** 800×400
 - **Inline section chart:** 500×300 (default)
-- **Sparkline:** 200×60, `devicePixelRatio=2`
 - **Email-safe:** keep `width ≤ 600`, format `png`
+
+Sparklines are a special case — see [sparkline](sparkline.md) for their dimensions.
 
 GitHub markdown caches images via a proxy. Image URLs are fetched once and served from the GitHub camo cache, so dynamic short URLs *will* eventually 404 once they expire upstream — see [Expiration](#expiration).
 
@@ -47,7 +48,6 @@ GitHub markdown caches images via a proxy. Image URLs are fetched once and serve
 - Title should state the takeaway, not the dimension. "Q4 revenue beat target by 12%" not "Quarterly revenue".
 - Drop the legend if there's only one series.
 - Format numbers with thousand separators and units. Use `ticks.callback` (passed as a JS string under POST) for currencies and percentages.
-- Sort bars by value unless the axis has a natural order (time, alphabetical category).
 
 ## Performance and caching
 
@@ -124,5 +124,6 @@ Some advanced configs need JS (e.g. `ticks.callback`, `tooltip.label`). Rules:
 
 - Don't hand-build URLs by string-concatenating JSON — always encode via the helper script or `encodeURIComponent`.
 - Don't put secrets or PII in chart data — URLs and short URLs are public. Push back hard if the operator attempts to do this.
-- Don't 3D-effect anything. Don't truncate axes to exaggerate differences. Don't use dual y-axes unless the relationship between metrics is the whole point.
+- Keep charts flat and 2D so length and position map straight to magnitude.
+- Reach for dual y-axes only when the relationship between the two metrics is the whole point of the chart.
 - Don't rely on the free-tier short URL outliving your output. If uncertain ask the operator if this is short lived or long lived output.
